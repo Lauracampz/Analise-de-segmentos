@@ -1,0 +1,185 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+int main()
+{
+    FILE *fp;
+    char arquivo [500];
+    int numElementos;
+    int numDiferentes=1;
+    int aux;
+    int **matrizFinal;
+    int *original,*vetorNum;
+    printf("Digite o nome do arquivo: ");
+    scanf("%s", arquivo);
+    fp = fopen(arquivo,"r"); // Abre arquivo texto para leitura
+    if(!fp)
+    {
+        printf("Erro na abertura do arquivo.\n");
+        return 0;
+    }
+
+    // separando as informacoes
+   fscanf(fp,"%i",&numElementos);
+
+    original = malloc( numElementos * sizeof(int));
+
+        for(int i = 0; i < numElementos; i++){
+
+            fscanf(fp,"%i",&*(original + i));
+           // printf("\n");
+         }
+
+        /*for(int i = 0; i < numElementos; i++){
+
+            printf("%i ", *(original + i));
+            printf("\n");
+         }*/
+         aux=*(original);
+         //printf("%i aaaaaaaaaaaaaaa ", aux);
+         //printf("\n");
+
+         for(int i = 1; i < numElementos; i++){
+
+            if(aux!=*(original + i)){
+            	aux=*(original + i);
+                numDiferentes++;
+            }
+         }
+         int qtdSeq=1;
+         for(int i = 0; i < numElementos-1; i++){
+            if(original[i]!= original[i+1]){
+                qtdSeq++;
+            }
+         }
+         //printf("%i sequencia \n", qtdSeq);
+         //printf("%i diferentes ", numDiferentes);
+         vetorNum=malloc( numDiferentes * sizeof(int));
+         int aux1;
+         int aux2;
+         int p=1;
+         vetorNum[0]=original[0];
+       /* for(int i = 0; i < numDiferentes; i++)
+        {
+            for(j = 0; j < aux2; j++ )
+            {
+                if( original[i] == vetorNum[j] ){
+                break;
+                }
+            }
+                if( j == aux2 )
+                {
+                    vetorNum[aux2] = original[i];
+                    aux2++;
+                }
+
+        }*/
+
+        for(int i = 0; i < numElementos; i++){
+                aux2=0;
+             for(int j = i+1; j < numElementos; j++){
+
+                 if((original[i])== (original[j])){
+                     aux2=1;
+
+                     break;
+                 }
+             }
+
+              for(int k=0;k<p;k++){
+                if(original[i] == vetorNum[k]){
+                   aux1=1;
+                   break;
+
+                }
+                else{
+                    aux1=0;
+                    break;
+                }
+
+              }
+              if(aux2==0 && aux1==0){
+                vetorNum[p]=original[i];
+                p++;
+              }
+
+        }
+
+
+        /* printf("\n");
+         for(int i = 0; i < numDiferentes; i++){
+
+            printf("%i ", vetorNum[i]);
+            printf("\n");
+         }*/
+
+
+    matrizFinal = malloc(2 * sizeof(int*));
+
+    for(int i = 0; i < 2; i++){
+        matrizFinal[i] = malloc(qtdSeq * sizeof(int));
+    }
+   int x=0;
+   int numSeq=1;
+    for(int i = 0; i < numElementos; i++){
+
+                 if((original[i])!= (original[i+1])){
+
+                     matrizFinal[0][x]=original[i];
+                     x++;
+                 }
+                 else if((original[i]==(original[i+1]))&& x==qtdSeq-1){
+                    matrizFinal[0][x]=original[i];
+                 }
+    }
+
+    int z=0;
+
+        for(int j = 0; j < numElementos; j++)
+        {
+                if(original[j]==original[j+1]){
+                    numSeq++;
+                }
+                else{
+
+                    matrizFinal[1][z]=numSeq;
+                    z++;
+                    numSeq=1;
+                }
+                if(z==x && original[j]!=original[j-1]){
+                      matrizFinal[1][z]=numElementos-j;
+
+                }
+
+        }
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < qtdSeq; j++){
+                for(int p=0;p<numDiferentes;p++){
+                    if(matrizFinal[0][j]== vetorNum[p]){
+                        matrizFinal[0][j]=p+1;
+                    }
+                }
+            }
+        }
+
+    printf("Matriz:\n");
+    // imprime a matriz
+    for(int i = 0; i < 2; i++){
+        for(int j = 0; j < qtdSeq; j++){
+            if(numDiferentes==0){
+                printf("1\n");
+                printf("%d ", numElementos);
+                i=2;
+            }
+            else{
+                printf("%d ", matrizFinal[i][j]);
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+
+
+}
